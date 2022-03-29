@@ -44,7 +44,7 @@ main(addmember, "Akbar", 0);
 main(addmember, "Anthony", 0);
 
 // Expenses
-main(addExpenses, "Amar", 10);
+main(addExpenses, "Amar", 20);
 main(addExpenses, "Akbar", 20);
 main(addExpenses, "Anthony", 30);
 
@@ -60,7 +60,16 @@ function split(tripname) {
   const average_expenses = Total_expenses / peoples.length;
   if (expenses[0] < average_expenses) {
     let money = average_expenses - expenses[0];
-    
+    let user = expenses.indexOf(average_expenses + money);
+    console.log(`${peoples[0]} have to pay ${peoples[user]} ₹ ${money} `);
+  } else if (expenses[1] < average_expenses) {
+    let money = average_expenses - expenses[1];
+    let user = expenses.indexOf(average_expenses + money);
+    console.log(`${peoples[1]} have to pay ${peoples[user]} ₹ ${money} `);
+  } else if (expenses[2] < average_expenses) {
+    let money = average_expenses - expenses[2];
+    let user = expenses.indexOf(average_expenses + money);
+    console.log(`${peoples[0]} have to pay ${peoples[user]} ₹ ${money} `);
   }
 }
 
