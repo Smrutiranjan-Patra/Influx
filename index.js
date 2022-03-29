@@ -19,7 +19,7 @@ function isUnique(tripname, name) {
 function addmember(tripname, name, expenses) {
   if (!isUnique(tripname, name)) {
     const members = new member(name, expenses);
-    console.log(members);
+    console.log("Members Added");
     tripname.push(members);
   } else {
     console.log("Invalid Member");
@@ -44,32 +44,53 @@ main(addmember, "Akbar", 0);
 main(addmember, "Anthony", 0);
 
 // Expenses
-main(addExpenses, "Amar", 20);
-main(addExpenses, "Akbar", 20);
+main(addExpenses, "Amar", 30);
+main(addExpenses, "Akbar", 30);
 main(addExpenses, "Anthony", 30);
 
 function split(tripname) {
-  let peoples = [];
-  let expenses = [];
-
+  let obj = {};
   for (let i = 0; i < tripname.length; i++) {
-    peoples.push(tripname[i].name);
-    expenses.push(tripname[i].expenses);
+    obj[tripname[i].name] = tripname[i].expenses;
   }
-  const Total_expenses = expenses.reduce((acc, curr) => curr + acc);
-  const average_expenses = Total_expenses / peoples.length;
-  if (expenses[0] < average_expenses) {
-    let money = average_expenses - expenses[0];
-    let user = expenses.indexOf(average_expenses + money);
-    console.log(`${peoples[0]} have to pay ${peoples[user]} ₹ ${money} `);
-  } else if (expenses[1] < average_expenses) {
-    let money = average_expenses - expenses[1];
-    let user = expenses.indexOf(average_expenses + money);
-    console.log(`${peoples[1]} have to pay ${peoples[user]} ₹ ${money} `);
-  } else if (expenses[2] < average_expenses) {
-    let money = average_expenses - expenses[2];
-    let user = expenses.indexOf(average_expenses + money);
-    console.log(`${peoples[0]} have to pay ${peoples[user]} ₹ ${money} `);
+  const people = Object.keys(obj);
+  const expenses = Object.values(obj);
+
+  const sum = expenses.reduce((acc, curr) => curr + acc);
+  const mean = Math.floor(sum / people.length);
+
+  const sortedPeople = people.sort(
+    (personA, personB) => obj[personA] - obj[personB]
+  );
+  const sortedexpenses = sortedPeople.map((person) => obj[person] - mean);
+
+  if (
+    sortedexpenses[0] === sortedexpenses[1] &&
+    sortedexpenses[1] === sortedexpenses[2]
+  ) {
+    console.log("No one have to pay to no one");
+  } else {
+    let i = 0;
+    let j = sortedPeople.length - 1;
+    let paying_amount;
+
+    while (i < j) {
+      paying_amount = Math.min(-sortedexpenses[i], sortedexpenses[j]);
+      sortedexpenses[i] += paying_amount;
+      sortedexpenses[j] -= paying_amount;
+
+      console.log(
+        `${sortedPeople[i]} owes ${sortedPeople[j]} ${paying_amount}`
+      );
+
+      if (sortedexpenses[i] === 0) {
+        i++;
+      }
+
+      if (sortedexpenses[j] === 0) {
+        j--;
+      }
+    }
   }
 }
 
